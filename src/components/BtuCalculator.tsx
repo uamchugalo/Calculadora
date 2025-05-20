@@ -38,6 +38,11 @@ const BtuCalculator: React.FC = () => {
 
   return (
     <div className="max-w-4xl mx-auto">
+      <header className="text-center py-6">
+        <h1 className="text-4xl font-bold text-blue-800 mb-2">Calculadora de BTUs</h1>
+        <p className="text-gray-600">Encontre o ar-condicionado ideal para seu ambiente</p>
+      </header>
+
       <section className="mb-8">
         <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
           <div className="max-w-2xl mx-auto">
