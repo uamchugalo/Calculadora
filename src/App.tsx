@@ -8,7 +8,7 @@ function App() {
       <header className="bg-blue-600 text-white py-4 shadow-md">
         <div className="container mx-auto px-4 flex items-center">
           <Snowflake className="h-8 w-8 mr-3" />
-          <h1 className="text-2xl md:text-3xl font-bold">BTU Calculator</h1>
+          <h1 className="text-2xl md:text-3xl font-bold">Calculadora de BTUs</h1>
         </div>
       </header>
       
@@ -18,7 +18,7 @@ function App() {
       
       <footer className="bg-blue-800 text-white py-4 mt-16">
         <div className="container mx-auto px-4 text-center text-sm">
-          <p>© {new Date().getFullYear()} BTU Calculator - Encontre o ar-condicionado ideal para seu ambiente</p>
+          <p>© {new Date().getFullYear()} Calculadora de BTUs - Encontre o ar-condicionado ideal para seu ambiente</p>
         </div>
       </footer>
     </div>
