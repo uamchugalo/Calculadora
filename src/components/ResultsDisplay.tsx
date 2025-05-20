@@ -11,8 +11,8 @@ interface ResultsDisplayProps {
 const AC_SIZES = [7000, 9000, 12000, 18000, 24000, 30000];
 
 const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ result, onReset }) => {
-  const handleDownloadPDF = () => {
-    generatePDF(result);
+  const handleDownload = async () => {
+    await generatePDF(result);
   };
 
   const formattedBTU = Math.round(result.btuRequired).toLocaleString('pt-BR');
@@ -110,7 +110,7 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ result, onReset }) => {
       
       <div className="flex flex-col sm:flex-row justify-center gap-4 mt-6">
         <button
-          onClick={handleDownloadPDF}
+          onClick={handleDownload}
           className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg flex items-center justify-center transition-all shadow hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           <Download className="h-5 w-5 mr-2" />
