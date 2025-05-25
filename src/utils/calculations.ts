@@ -21,10 +21,13 @@ const AC_SIZES = [7000, 9000, 12000, 18000, 24000, 30000];
  * Calculate the required BTUs based on room dimensions and other factors
  */
 export const calculateBTU = (data: FormData): number => {
-  // Calculate room area
-  const width = Number(data.width);
-  const length = Number(data.length);
-  const area = width * length;
+  // Calculate area based on input type
+  let area: number;
+  if (data.area) {
+    area = Number(data.area);
+  } else {
+    area = Number(data.width) * Number(data.length);
+  }
   
   // Base BTU calculation
   let btuRequired = area * BASE_BTU_PER_SQM;

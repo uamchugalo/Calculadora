@@ -44,6 +44,15 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ result, onReset }) => {
             <p className="text-3xl font-bold text-green-600">{result.recommendedSize.toLocaleString('pt-BR')} BTUs</p>
           </div>
         </div>
+        
+        {/* Alerta sobre equipamentos */}
+        <div className="mt-4 bg-yellow-50 border border-yellow-200 rounded-lg p-3">
+          <p className="text-sm text-yellow-700">
+            <strong>Atenção:</strong> Este cálculo considera um ambiente padrão. Se houver equipamentos que emitem calor 
+            (Fogão, eletrodomésticos) ou outras fontes de calor significativas, a potência necessária pode ser maior. 
+            Para um dimensionamento mais preciso, consulte um profissional.
+          </p>
+        </div>
       </div>
       
       <div className="mb-8">
@@ -86,13 +95,27 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ result, onReset }) => {
         <div className="grid md:grid-cols-2 gap-4">
           <div>
             <p className="text-sm text-gray-600">Dimensões:</p>
-            <p className="font-medium text-blue-800">
-              {result.formData.width}m × {result.formData.length}m × {result.formData.height}m
-            </p>
-            <p className="text-sm text-gray-600 mt-2">Área:</p>
-            <p className="font-medium text-blue-800">
-              {(Number(result.formData.width) * Number(result.formData.length)).toFixed(2)} m²
-            </p>
+            {result.formData.area ? (
+              <>
+                <p className="font-medium text-blue-800">
+                  {result.formData.area} m²
+                </p>
+                <p className="text-sm text-gray-600 mt-2">Altura:</p>
+                <p className="font-medium text-blue-800">
+                  {result.formData.height || '2.7'}m
+                </p>
+              </>
+            ) : (
+              <>
+                <p className="font-medium text-blue-800">
+                  {result.formData.width}m × {result.formData.length}m × {result.formData.height || '2.7'}m
+                </p>
+                <p className="text-sm text-gray-600 mt-2">Área:</p>
+                <p className="font-medium text-blue-800">
+                  {(Number(result.formData.width) * Number(result.formData.length)).toFixed(2)} m²
+                </p>
+              </>
+            )}
           </div>
           <div>
             <p className="text-sm text-gray-600">Pessoas no ambiente:</p>
@@ -123,6 +146,12 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ result, onReset }) => {
           <RefreshCw className="h-5 w-5 mr-2" />
           Novo Cálculo
         </button>
+      </div>
+
+      {/* Disclaimer */}
+      <div className="mt-8 text-center text-xs text-gray-500">
+        <p>Esta calculadora fornece apenas uma estimativa. Não nos responsabilizamos por escolhas inadequadas de equipamentos.</p>
+        <p>Para garantir a escolha correta, recomendamos consultar um profissional qualificado.</p>
       </div>
     </div>
   );

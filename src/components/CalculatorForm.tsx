@@ -5,24 +5,37 @@ import { Sun, Users, Ruler, Home } from 'lucide-react';
 interface CalculatorFormProps {
   onCalculate: (data: FormData) => void;
   initialData: FormData | null;
+  calculationType: 'dimensions' | 'area';
 }
 
 const DEFAULT_HEIGHT = 2.7;
 
-const CalculatorForm: React.FC<CalculatorFormProps> = ({ onCalculate, initialData }) => {
+const CalculatorForm: React.FC<CalculatorFormProps> = ({ onCalculate, initialData, calculationType }) => {
   const [formData, setFormData] = useState<FormData>({
-    width: initialData?.width || '',
-    length: initialData?.length || '',
-    height: initialData?.height || '',
-    peopleCount: initialData?.peopleCount || 1,
-    sunExposure: initialData?.sunExposure || 'none',
-    customerName: initialData?.customerName || ''
+    width: '',
+    length: '',
+    height: '',
+    area: '',
+    peopleCount: 1,
+    sunExposure: 'none',
+    customerName: ''
   });
 
   const [errors, setErrors] = useState<Partial<Record<keyof FormData, string>>>({});
 
+  // Reset form when initialData is null
   useEffect(() => {
-    if (initialData) {
+    if (initialData === null) {
+      setFormData({
+        width: '',
+        length: '',
+        height: '',
+        area: '',
+        peopleCount: 1,
+        sunExposure: 'none',
+        customerName: ''
+      });
+    } else {
       setFormData(initialData);
     }
   }, [initialData]);
@@ -48,16 +61,38 @@ const CalculatorForm: React.FC<CalculatorFormProps> = ({ onCalculate, initialDat
   const validate = (): boolean => {
     const newErrors: Partial<Record<keyof FormData, string>> = {};
     
-    if (!formData.width) {
-      newErrors.width = 'A largura é necessária';
-    } else if (Number(formData.width) <= 0) {
-      newErrors.width = 'Largura deve ser maior que zero';
+    let totalArea = 0;
+    if (calculationType === 'dimensions') {
+      if (!formData.width) {
+        newErrors.width = 'A largura é necessária';
+      } else if (Number(formData.width) <= 0) {
+        newErrors.width = 'Largura deve ser maior que zero';
+      }
+      
+      if (!formData.length) {
+        newErrors.length = 'O comprimento é necessário';
+      } else if (Number(formData.length) <= 0) {
+        newErrors.length = 'Comprimento deve ser maior que zero';
+      }
+
+      totalArea = Number(formData.width) * Number(formData.length);
+    } else {
+      if (!formData.area) {
+        newErrors.area = 'A área é necessária';
+      } else if (Number(formData.area) <= 0) {
+        newErrors.area = 'Área deve ser maior que zero';
+      }
+      totalArea = Number(formData.area);
     }
-    
-    if (!formData.length) {
-      newErrors.length = 'O comprimento é necessário';
-    } else if (Number(formData.length) <= 0) {
-      newErrors.length = 'Comprimento deve ser maior que zero';
+
+    // Verificar limite de área
+    if (totalArea > 50) {
+      if (calculationType === 'dimensions') {
+        newErrors.width = 'Para áreas maiores que 50m², consulte um profissional';
+        newErrors.length = 'Para áreas maiores que 50m², consulte um profissional';
+      } else {
+        newErrors.area = 'Para áreas maiores que 50m², consulte um profissional';
+      }
     }
     
     if (formData.height && Number(formData.height) <= 0) {
@@ -94,37 +129,57 @@ const CalculatorForm: React.FC<CalculatorFormProps> = ({ onCalculate, initialDat
         </h3>
         
         <div className="grid md:grid-cols-3 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Largura (m)
-            </label>
-            <input
-              type="number"
-              name="width"
-              value={formData.width}
-              onChange={handleInputChange}
-              step="0.01"
-              className={`w-full rounded-md border ${errors.width ? 'border-red-500' : 'border-blue-300'} px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500`}
-              placeholder="Ex: 3.5"
-            />
-            {errors.width && <p className="mt-1 text-sm text-red-500">{errors.width}</p>}
-          </div>
-          
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Comprimento (m)
-            </label>
-            <input
-              type="number"
-              name="length"
-              value={formData.length}
-              onChange={handleInputChange}
-              step="0.01"
-              className={`w-full rounded-md border ${errors.length ? 'border-red-500' : 'border-blue-300'} px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500`}
-              placeholder="Ex: 4.0"
-            />
-            {errors.length && <p className="mt-1 text-sm text-red-500">{errors.length}</p>}
-          </div>
+          {calculationType === 'dimensions' ? (
+            <>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Largura (m)
+                </label>
+                <input
+                  type="number"
+                  name="width"
+                  value={formData.width}
+                  onChange={handleInputChange}
+                  step="0.01"
+                  className={`w-full rounded-md border ${errors.width ? 'border-red-500' : 'border-blue-300'} px-3 py-2`}
+                  placeholder="Ex: 3.5"
+                />
+                {errors.width && <p className="mt-1 text-sm text-red-500">{errors.width}</p>}
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Comprimento (m)
+                </label>
+                <input
+                  type="number"
+                  name="length"
+                  value={formData.length}
+                  onChange={handleInputChange}
+                  step="0.01"
+                  className={`w-full rounded-md border ${errors.length ? 'border-red-500' : 'border-blue-300'} px-3 py-2`}
+                  placeholder="Ex: 4.0"
+                />
+                {errors.length && <p className="mt-1 text-sm text-red-500">{errors.length}</p>}
+              </div>
+            </>
+          ) : (
+            <div className="md:col-span-2">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Área total (m²)
+              </label>
+              <input
+                type="number"
+                name="area"
+                value={formData.area}
+                onChange={handleInputChange}
+                step="0.01"
+                className={`w-full rounded-md border ${errors.area ? 'border-red-500' : 'border-blue-300'} px-3 py-2`}
+                placeholder="Ex: 14"
+              />
+              {errors.area && <p className="mt-1 text-sm text-red-500">{errors.area}</p>}
+            </div>
+          )}
           
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -136,7 +191,7 @@ const CalculatorForm: React.FC<CalculatorFormProps> = ({ onCalculate, initialDat
               value={formData.height}
               onChange={handleInputChange}
               step="0.01"
-              className={`w-full rounded-md border ${errors.height ? 'border-red-500' : 'border-blue-300'} px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500`}
+              className={`w-full rounded-md border ${errors.height ? 'border-red-500' : 'border-blue-300'} px-3 py-2`}
               placeholder={`Padrão: ${DEFAULT_HEIGHT}m`}
             />
             {errors.height && <p className="mt-1 text-sm text-red-500">{errors.height}</p>}
