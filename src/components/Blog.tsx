@@ -28,7 +28,36 @@ const Blog: React.FC = () => {
   return (
     <div className="max-w-4xl mx-auto">
       <header className="bg-blue-600 text-white py-6 relative">
-        {/* Header content */}
+        <header className="bg-blue-600 text-white py-6 relative">
+          <div className="px-4 sm:px-6 lg:px-8">
+            <div className="flex justify-between items-center">
+              <div className="flex items-center">
+                <img src="/snow.webp" alt="Logo" className="h-8 w-8 mr-2" />
+                <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold">Calculadora de BTUs</h1>
+              </div>
+              <button 
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                className="text-white hover:text-blue-100 focus:outline-none"
+              >
+                {isMenuOpen ? (
+                  <X className="h-6 w-6" />
+                ) : (
+                  <Menu className="h-6 w-6" />
+                )}
+              </button>
+            </div>
+          </div>
+          
+          {isMenuOpen && (
+            <div className="absolute top-full left-0 right-0 bg-white shadow-lg z-50">
+              <div className="px-2 pt-2 pb-3 space-y-1">
+                <a href="/" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50">
+                  Calculadora
+                </a>
+              </div>
+            </div>
+          )}
+        </header>
       </header>
 
       <div className="px-4 sm:px-6 lg:px-8 py-8">
