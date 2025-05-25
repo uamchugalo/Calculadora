@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import CalculatorForm from './CalculatorForm';
 import ResultsDisplay from './ResultsDisplay';
 import AffiliateLinks from './AffiliateLinks';
@@ -12,7 +13,10 @@ const BtuCalculator: React.FC = () => {
   const [formData, setFormData] = useState<FormData | null>(null);
   const [calculationType, setCalculationType] = useState<'dimensions' | 'area'>('dimensions');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
+  const [showResult, setShowResult] = useState(false);
+  const [btuResult, setBtuResult] = useState(0);
+  const navigate = useNavigate();
+  
   const handleCalculate = (data: FormData) => {
     const btuRequired = calculateBTU(data);
     const recommended = recommendedACSize(btuRequired);
@@ -128,7 +132,11 @@ const BtuCalculator: React.FC = () => {
         {result && (
           <>
             <div id="results">
-              <ResultsDisplay result={result} onReset={handleReset} />
+              <ResultsDisplay 
+                result={result} 
+                onReset={handleReset} 
+                onViewOptions={() => navigate(`/blog/${result.recommendedSize}`)}
+              />
             </div>
             
             <AdSpace />

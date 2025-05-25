@@ -6,11 +6,13 @@ import { generatePDF } from '../utils/pdfGenerator';
 interface ResultsDisplayProps {
   result: CalculationResult;
   onReset: () => void;
+  onViewOptions: () => void;
 }
 
-const AC_SIZES = [7000, 9000, 12000, 18000, 24000, 30000];
+// Modificando a constante AC_SIZES para remover a opção de 7000 BTUs
+const AC_SIZES = [9000, 12000, 18000, 24000, 30000];
 
-const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ result, onReset }) => {
+const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ result, onReset, onViewOptions }) => {
   const handleDownload = async () => {
     await generatePDF(result);
   };
@@ -24,6 +26,12 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ result, onReset }) => {
     return { diff, percentage };
   };
 
+  // Remover esta função duplicada que não é usada
+  // const handleDownloadPDF = () => {
+  //   // PDF download logic
+  //   console.log('Downloading PDF...');
+  // };
+
   return (
     <div className="bg-gradient-to-b from-blue-100 to-white rounded-lg shadow-lg p-6 mb-8 transform transition-all duration-500 animate-fade-in">
       <div className="text-center mb-6">
@@ -31,6 +39,16 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ result, onReset }) => {
           <Thermometer className="h-8 w-8" />
         </div>
         <h2 className="text-2xl font-bold text-gray-800">Resultado do Cálculo</h2>
+      </div>
+      
+      {/* Botão Ver opções de compra - ADICIONADO AQUI */}
+      <div className="text-center mb-6">
+        <button
+          onClick={onViewOptions}
+          className="w-full sm:w-auto px-6 py-3 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors font-medium text-lg shadow-md"
+        >
+          Ver opções de compra
+        </button>
       </div>
       
       <div className="bg-white rounded-lg border border-blue-200 p-4 mb-6">
@@ -57,8 +75,41 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ result, onReset }) => {
       
       <div className="mb-8">
         <h3 className="text-lg font-semibold text-gray-800 mb-3">Opções de ar-condicionado disponíveis:</h3>
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-          {AC_SIZES.map((size) => {
+        <div className="grid grid-cols-3 gap-3">
+          {AC_SIZES.slice(0, 3).map((size) => {
+            const isRecommended = size === result.recommendedSize;
+            const { percentage } = getSizeProximity(size);
+            const isClose = percentage < 20 && !isRecommended;
+            
+            return (
+              <div 
+                key={size}
+                className={`border ${isRecommended 
+                  ? 'bg-green-50 border-green-500' 
+                  : isClose 
+                    ? 'bg-blue-50 border-blue-300' 
+                    : 'bg-white border-gray-200'
+                } rounded-md p-3 text-center transition-all hover:shadow-md ${
+                  isRecommended ? 'transform scale-105 shadow-md' : ''
+                }`}
+              >
+                <p className={`font-bold ${isRecommended ? 'text-green-600' : 'text-gray-700'}`}>
+                  {size.toLocaleString('pt-BR')} BTUs
+                </p>
+                {isRecommended && (
+                  <p className="text-xs font-medium text-green-600 mt-1">Recomendado</p>
+                )}
+                {isClose && !isRecommended && (
+                  <p className="text-xs font-medium text-blue-600 mt-1">Opção viável</p>
+                )}
+              </div>
+            );
+          })}
+        </div>
+        
+        {/* Segunda linha com 24.000 e 30.000 BTUs centralizada */}
+        <div className="grid grid-cols-2 gap-3 mt-3 max-w-md mx-auto">
+          {AC_SIZES.slice(3).map((size) => {
             const isRecommended = size === result.recommendedSize;
             const { percentage } = getSizeProximity(size);
             const isClose = percentage < 20 && !isRecommended;
@@ -128,6 +179,16 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ result, onReset }) => {
               {result.formData.sunExposure === 'allday' && 'O dia todo'}
             </p>
           </div>
+        </div>
+        
+        {/* Botão de Ver opções de compra adicionado na área circulada */}
+        <div className="mt-4 text-center">
+          <button
+            onClick={onViewOptions}
+            className="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors font-medium shadow-md"
+          >
+            Ver opções de compra
+          </button>
         </div>
       </div>
       
