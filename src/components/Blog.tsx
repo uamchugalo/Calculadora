@@ -52,8 +52,9 @@ const Blog: React.FC = () => {
     }
   };
   
-  // Links de afiliados para cada marca com BTUs
+  // Links de afiliados para cada marca com BTUs - Modificado para usar apenas links de pesquisa
   const getAffiliateLink = (brand: string, btuSize?: string) => {
+    // Sempre usar links de pesquisa, que foram confirmados como funcionando
     const baseLink = `https://www.amazon.com.br/s?k=ar+condicionado+${brand}`;
     const btuParam = btuSize ? `+${btuSize}+btus` : '';
     return `${baseLink}${btuParam}&tag=fb02d7-20`;
@@ -85,7 +86,7 @@ const Blog: React.FC = () => {
           <div className="absolute top-full left-0 right-0 bg-white shadow-lg z-50">
             <div className="px-2 pt-2 pb-3 space-y-1">
               <a href="/" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50">
-                Calculadora
+                Calculadora de BTUs
               </a>
             </div>
           </div>
@@ -94,7 +95,7 @@ const Blog: React.FC = () => {
 
       <div className="px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-blue-800 mb-4">Blog - Comparações de Ar Condicionado</h1>
+          <h1 className="text-3xl font-bold text-blue-800 mb-4">Escolha Seu Ar-Condicionado</h1>
           <p className="text-gray-600 mb-6">Encontre o melhor ar condicionado para suas necessidades com nossas análises detalhadas e comparações.</p>
           
           {/* Seleção de tamanho */}
