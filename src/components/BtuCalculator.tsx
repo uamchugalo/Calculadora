@@ -77,12 +77,6 @@ const BtuCalculator: React.FC = () => {
               <a href="/blog" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50">
                 Blog
               </a>
-              <a href="/comparacoes" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50">
-                Comparações
-              </a>
-              <a href="/guia-compra" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50">
-                Guia de Compra
-              </a>
             </div>
           </div>
         )}
